@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .prediction-text {
+            color: #333333;
+            font-size: 18px;
+            margin-top: 20px; 
+        }
+        ul {
+            list-style-type: none; 
+            padding: 0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: flex-start; 
+        }
+        li {
+            background-color: #f9f9f9; 
+            padding: 10px; 
+            margin-right: 10px; 
+            margin-bottom: 10px; 
+            border-radius: 4px; 
+        }
+        .normal {
+            width: 100px; 
+            height: 100px;
+            object-fit: cover; 
+            border-radius: 4px;
+        }
+        .cropped{
+            max-width: 100%; 
+            height: auto; 
+            border-radius: 4px; 
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h1>Defect Detection</h1>
+    
+        <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data">
+            <input type="file" id="imageInput" name="imageInput" accept="image/*" multiple>
+            <button type="submit">Upload</button>
+        </form>
+        {{prediction_text}}
+        {% if defected_images or defected_nr_images %}
+        <div class="results">
+            <h2>Defected Images</h2>
+            <ul>
+                {% for image_name in defected_images %}
+                    <li>
+                        <img class="cropped" src="{{ url_for('static', filename='uploads/' + image_name) }}" alt="{{ image_name }}">
+                    </li>
+                {% endfor %}
+                {% for image_name in defected_nr_images %}
+                    <li>
+                        <img class="normal" src="{{ url_for('static', filename='normal/' + image_name) }}" alt="{{ image_name }}">
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        </div>
+    </div>
+</body>
+</html>
